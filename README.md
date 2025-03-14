@@ -1,23 +1,7 @@
 custom-screensaver
 ==================
 
-Probably the only custom screensaver you'll ever need on webOS TV.
+The only changes I made was to link directly to a png in what I believe is the default path and made it resize to whatever the image is. 
+I did get another dvd logo and cleaned it up as the old one wasn't too great
 
-Requires root.
-
-Features
---------
-
-* Autostart registration
-* Temporary apply
-* Launch screensaver immediately for testing
-
-Installation
-------------
-This should be downloadable in Homebrew Channel. Otherwise, there's an `ipk` in
-GitHub releases to the right. You are on your own here.
-
-Acknowledgments
----------------
-- Original animation POC by an unnamed individual.
-- According to WikiMedia Commons - DVD Video logotype does not meet the [threshold of originality](https://commons.wikimedia.org/wiki/Commons:Threshold_of_originality) needed for copyright protection, and is therefore in the public domain.
+to add a custom image once you have the original app installed is to use [WebOS Dev Manager](https://github.com/webosbrew/dev-manager-desktop) to connect or whatever method you prefer and go to /media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver/assets and then upload 300.png and screensaver-main.qml. The custom image you want to use has to be like the original where the black is transparent and where it's transparent changes colours
