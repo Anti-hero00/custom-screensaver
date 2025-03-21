@@ -8,3 +8,6 @@ to add a custom image once you have the original app installed is to use [WebOS 
 The custom image you want to use has to be like the original where the black is transparent and where it's transparent changes colours.
 
 The image size I would recommend is probably not too much bigger than 300X300 but it's up to you if you want to test something massive lol
+
+
+This branch has 9 images and it will pick a random one when it starts you can replace them and delete them from the qml file if you want to just have a few obviously copy all the images if you are going to use them all. These are some random logos and shit I edited to work with this screensaver.
