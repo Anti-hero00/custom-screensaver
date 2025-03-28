@@ -14,8 +14,8 @@ import QtQuick.Window 2.2
 WebOSWindow {
     id: window
 
-    width: 1920
-    height: 1080
+    width: Screen.desktopAvailableWidth
+    height: Screen.desktopAvailableHeight
 
     windowType: "_WEBOS_WINDOW_TYPE_SCREENSAVER"
     color: "black"
@@ -23,7 +23,19 @@ WebOSWindow {
     title: "Screensaver"
     appId: "com.webos.app.screensaver"
     visible: true
+    property string basePath: '/media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver/assets/'
+    property int previousIndex: -1
+    property real anY: 0
+    property real anX: 0
+    property var colors: ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff', '#fff', '#ffa500', '#800080', '#008000', '#000080', '#ffc0cb', '#a52a2a', '#808080', '#ffffe0', '#add8e6', '#d3d3d3', '#ff6347', '#4682b4', '#ff1493', '#ff4500', '#32cd32', '#1e90ff', '#9370db', '#ff69b4', '#7fff00', '#00ced1', '#ffb6c1', '#d2691e', '#b22222', '#6495ed']
+    /*Text {
+id: txx
+anchors.right: parent.right
+anchors.rightMargin: 20
 
+        text: "Width: " + Screen.width + ' \nHeight: ' + Screen.height 
+        color: "red"
+    }*/
     Item {
         id: root
 
@@ -36,32 +48,33 @@ WebOSWindow {
             id: boing
 
             color: 'black'
-			width: image.width
-			height: image.height
+
+            width: image.width
+            height: image.height
 
             function setRandomColor() {
-                var colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff', '#fff', '#ffa500', '#800080', '#008000', '#000080', '#ffc0cb', '#a52a2a', '#808080', '#ffffe0', '#add8e6', '#d3d3d3', '#ff6347', '#4682b4', '#ff1493', '#ff4500', '#32cd32', '#1e90ff', '#9370db', '#ff69b4', '#7fff00', '#00ced1', '#ffb6c1', '#d2691e', '#b22222', '#6495ed'];
+                var index;
+    		do {
+        	index = Math.floor(Math.random() * colors.length);
+    		} while (index === previousIndex);
 
-                var index = (Math.random() * colors.length) | 0;
-                boing.color = colors[index];
-            }
+    previousIndex = index; 
+    boing.color = colors[index];
+}
 
              Image {
 			id: image
-			source: "/media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver/assets/300.png"
-			Timer {
-				interval: 100
-				running: true
-				repeat: true
-				onTriggered: {
-					if (image.width > 0 && image.height > 0) {
-						boing.width = image.width;
-						boing.height = image.height;
-						this.stop();
-					}
-				}
-			}
-		}
+			source: basePath + "300.png"
+    onStatusChanged: {
+        if (status == Image.Ready) {
+            boing.width = image.width;
+            boing.height = image.height;
+            anX = 1920 * (image.width / 28);
+            anY = 1080 * (image.height / 43);
+	    /*txx.text = boing.width + '   \n' + boing.height;*/
+        }
+    }
+}
 
             Component.onCompleted: {
                 boing.setRandomColor();
@@ -71,14 +84,14 @@ WebOSWindow {
                 loops: Animation.Infinite
                 PropertyAnimation {
                     easing.type: Easing.Linear
-                    duration: 1920 * 11
-                    to: 1920 - boing.width
+                    duration: anX
+                    to: Screen.width - boing.width
                 }
 
                 ScriptAction { script: boing.setRandomColor(); }
                 PropertyAnimation {
                     easing.type: Easing.Linear
-                    duration: 1920 * 11
+                    duration: anX
                     to: 0
                 }
                 ScriptAction { script: boing.setRandomColor(); }
@@ -88,13 +101,13 @@ WebOSWindow {
                 loops: Animation.Infinite
                 PropertyAnimation {
                     easing.type: Easing.Linear
-                    duration: 1080 * 7
-                    to: 1080 - boing.height
+                    duration: anY
+                    to: Screen.height - boing.height
                 }
                 ScriptAction { script: boing.setRandomColor(); }
                 PropertyAnimation {
                     easing.type: Easing.Linear
-                    duration: 1080 * 7
+                    duration: anY
                     to: 0
                 }
                 ScriptAction { script: boing.setRandomColor(); }
