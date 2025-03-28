@@ -32,7 +32,7 @@ jobs:
 
     - name: Create Release
       id: create_release
-      uses: actions/create-release@v4
+      uses: actions/create-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -43,7 +43,7 @@ jobs:
 
     - name: Upload IPK asset
       id: upload-ipk-asset
-      uses: actions/upload-release-asset@v4
+      uses: actions/upload-release-asset@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -54,7 +54,7 @@ jobs:
 
     - name: Upload Manifest asset
       id: upload-manifest-asset
-      uses: actions/upload-release-asset@v4
+      uses: actions/upload-release-asset@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
