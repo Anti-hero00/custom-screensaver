@@ -14,8 +14,8 @@ import QtQuick.Window 2.2
 WebOSWindow {
     id: window
 
-    width: 1920
-    height: 1080
+    width: Screen.desktopAvailableWidth
+    height: Screen.desktopAvailableHeight
 
     windowType: "_WEBOS_WINDOW_TYPE_SCREENSAVER"
     color: "black"
@@ -23,7 +23,19 @@ WebOSWindow {
     title: "Screensaver"
     appId: "com.webos.app.screensaver"
     visible: true
+    property string basePath: '/media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver/assets/'
+    property int previousIndex: -1
+    property real anY: 0
+    property real anX: 0
+    property var colors: ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff', '#fff', '#ffa500', '#800080', '#008000', '#000080', '#ffc0cb', '#a52a2a', '#808080', '#ffffe0', '#add8e6', '#d3d3d3', '#ff6347', '#4682b4', '#ff1493', '#ff4500', '#32cd32', '#1e90ff', '#9370db', '#ff69b4', '#7fff00', '#00ced1', '#ffb6c1', '#d2691e', '#b22222', '#6495ed']
+    /*Text {
+id: txx
+anchors.right: parent.right
+anchors.rightMargin: 20
 
+        text: "Width: " + Screen.width + ' \nHeight: ' + Screen.height 
+        color: "red"
+    }*/
     Item {
         id: root
 
@@ -36,54 +48,45 @@ WebOSWindow {
             id: boing
 
             color: 'black'
-			width: image.width
-			height: image.height
+
+            width: image.width
+            height: image.height
 
             function setRandomColor() {
-                var colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff', '#fff', '#ffa500', '#800080', '#008000', '#000080', '#ffc0cb', '#a52a2a', '#808080', '#ffffe0', '#add8e6', '#d3d3d3', '#ff6347', '#4682b4', '#ff1493', '#ff4500', '#32cd32', '#1e90ff', '#9370db', '#ff69b4', '#7fff00', '#00ced1', '#ffb6c1', '#d2691e', '#b22222', '#6495ed'];
-                var index = (Math.random() * colors.length) | 0;
-                boing.color = colors[index];
-            }
-				Timer {
-    id: myTimer
-    interval: 1000 // Time in milliseconds (1000 ms = 1 second)
-    running: true // Start the timer automatically
-    repeat: true // Set to true for a repeating timer
+                var index;
+    		do {
+        	index = Math.floor(Math.random() * colors.length);
+    		} while (index === previousIndex);
 
-    onTriggered: {
-        boing.pulse(1000);
-    }
+    previousIndex = index; 
+    boing.color = colors[index];
 }
 
              Image {
 			id: image
     property var imageSources: [
-        "/media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver/assets/300.png",
-        "/media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver/assets/301.png",
-        "/media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver/assets/302.png",
-        "/media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver/assets/303.png",
-        "/media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver/assets/304.png",
-        "/media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver/assets/305.png",
-        "/media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver/assets/306.png",
-        "/media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver/assets/307.png",
-        "/media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver/assets/308.png"
+        "300.png",
+        "301.png",
+        "302.png",
+        "303.png",
+        "304.png",
+        "305.png",
+        "306.png",
+        "307.png",
+        "308.png"
     ]
 
-source: image.imageSources[(Math.random() * image.imageSources.length) | 0]
-
-			Timer {
-				interval: 100
-				running: true
-				repeat: true
-				onTriggered: {
-					if (image.width > 0 && image.height > 0) {
-						boing.width = image.width;
-						boing.height = image.height;
-						this.stop();
-					}
-				}
-			}
-		}
+source: basePath + (image.imageSources[(Math.random() * image.imageSources.length) | 0])
+    onStatusChanged: {
+        if (status == Image.Ready) {
+            boing.width = image.width;
+            boing.height = image.height;
+            anX = 1920 * (image.width / 28);
+            anY = 1080 * (image.height / 43);
+	    /*txx.text = boing.width + '   \n' + boing.height;*/
+        }
+    }
+}
 
             Component.onCompleted: {
                 boing.setRandomColor();
@@ -93,14 +96,14 @@ source: image.imageSources[(Math.random() * image.imageSources.length) | 0]
                 loops: Animation.Infinite
                 PropertyAnimation {
                     easing.type: Easing.Linear
-                    duration: 1920 * 11
-                    to: 1920 - boing.width
+                    duration: anX
+                    to: Screen.width - boing.width
                 }
 
                 ScriptAction { script: boing.setRandomColor(); }
                 PropertyAnimation {
                     easing.type: Easing.Linear
-                    duration: 1920 * 11
+                    duration: anX
                     to: 0
                 }
                 ScriptAction { script: boing.setRandomColor(); }
@@ -110,13 +113,13 @@ source: image.imageSources[(Math.random() * image.imageSources.length) | 0]
                 loops: Animation.Infinite
                 PropertyAnimation {
                     easing.type: Easing.Linear
-                    duration: 1080 * 7
-                    to: 1080 - boing.height
+                    duration: anY
+                    to: Screen.height - boing.height
                 }
                 ScriptAction { script: boing.setRandomColor(); }
                 PropertyAnimation {
                     easing.type: Easing.Linear
-                    duration: 1080 * 7
+                    duration: anY
                     to: 0
                 }
                 ScriptAction { script: boing.setRandomColor(); }
