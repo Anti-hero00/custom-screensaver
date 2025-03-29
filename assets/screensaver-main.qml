@@ -27,7 +27,6 @@ WebOSWindow {
     property int previousIndex: -1
     property real anY: 0
     property real anX: 0
-    property var colors: ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff', '#fff', '#ffa500', '#800080', '#008000', '#000080', '#ffc0cb', '#a52a2a', '#808080', '#ffffe0', '#add8e6', '#d3d3d3', '#ff6347', '#4682b4', '#ff1493', '#ff4500', '#32cd32', '#1e90ff', '#9370db', '#ff69b4', '#7fff00', '#00ced1', '#ffb6c1', '#d2691e', '#b22222', '#6495ed']
     /*Text {
 id: txx
 anchors.right: parent.right
@@ -51,16 +50,25 @@ anchors.rightMargin: 20
 
             width: image.width
             height: image.height
-
-            function setRandomColor() {
-                var index;
-    		do {
-        	index = Math.floor(Math.random() * colors.length);
-    		} while (index === previousIndex);
-
-    previousIndex = index; 
-    boing.color = colors[index];
-}
+    function randomColor() {
+        var r, g, b, luminance;
+        do {
+            r = Math.floor(Math.random() * 256);
+            g = Math.floor(Math.random() * 256);
+            b = Math.floor(Math.random() * 256);
+            luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+        } while (luminance < 60 || luminance > 195);
+        return "#" + ("0" + r.toString(16)).slice(-2) +
+                     ("0" + g.toString(16)).slice(-2) +
+                     ("0" + b.toString(16)).slice(-2);
+    }
+    function setRandomColor() {
+        var newColor;
+        do {
+            newColor = randomColor();
+        } while (newColor === boing.color);
+        boing.color = newColor;
+    }
 
              Image {
 			id: image
@@ -82,7 +90,7 @@ source: basePath + (image.imageSources[(Math.random() * image.imageSources.lengt
             boing.width = image.width;
             boing.height = image.height;
             anX = 1920 * (image.width / 28);
-            anY = 1080 * (image.height / 43);
+            anY = 1080 * (image.width / 43);
 	    /*txx.text = boing.width + '   \n' + boing.height;*/
         }
     }
